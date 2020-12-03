@@ -5,10 +5,31 @@ class Writer():
     def __init__(self, filename):
         self.filename = filename
 
-    def write(self, data_list):
+    def write(self, house_data):
+        try:
+            file_to_check = pathlib.Path(self.filename)
+            if file_to_check.exists():
+                #using existing file
+                with open(self.filename, 'a', newline='', encoding='utf-8') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(house_data.values())    
+            
+            else:
+                column_names = house_data.keys()
+                #creating a new file
+                with open(self.filename, 'a', newline='', encoding='utf-8') as file:
+                    writer = csv.DictWriter(file, fieldnames=column_names)
+                    writer.writeheader()
+                    writer.writerow(house_data.values()) 
+            
+            return True
+        except:
+            return False
+
+    def write_list(self, data_list):
         file_to_check = pathlib.Path(self.filename)
         if file_to_check.exists():
-            print('creating a new file..')
+            print('using existing file..')
             with open(self.filename, 'a', newline='', encoding='utf-8') as file:
                 writer = csv.writer(file)
                 for data in data_list:
@@ -17,7 +38,7 @@ class Writer():
         else:
             first = vars(data_list[0])
             column_names = first.keys()
-            print('using existing file..')
+            print('creating a new file..')
             with open(self.filename, 'a', newline='', encoding='utf-8') as file:
                 writer = csv.DictWriter(file, fieldnames=column_names)
                 writer.writeheader()
