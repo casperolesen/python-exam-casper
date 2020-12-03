@@ -26,8 +26,10 @@ links_50 = links[:50].tolist()
 #print(links_df.head())
 #links = links_df['url'].to_numpy()
 
+
 ### CRAWL LINKS AND WRITE DATE TO FILE ###
 #print(crawler.run(links))
+
 
 ### VIEW HOUSE DATA ###
 

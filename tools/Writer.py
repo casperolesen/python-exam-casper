@@ -5,7 +5,7 @@ class Writer():
     def __init__(self, filename):
         self.filename = filename
 
-    def write(self, house_data):
+    def write(self, house_data, columns):
         try:
             file_to_check = pathlib.Path(self.filename)
             if file_to_check.exists():
@@ -15,10 +15,10 @@ class Writer():
                     writer.writerow(house_data.values())    
             
             else:
-                column_names = house_data.keys()
+                #column_names = house_data.keys()
                 #creating a new file
                 with open(self.filename, 'a', newline='', encoding='utf-8') as file:
-                    writer = csv.DictWriter(file, fieldnames=column_names)
+                    writer = csv.DictWriter(file, fieldnames=columns)
                     writer.writeheader()
                     writer.writerow(house_data.values()) 
             
