@@ -8,9 +8,15 @@ from operator import itemgetter
 
 class Crawler():
     def __init__(self, writer):
-        self.expected = ['Type', 'Energimærke', 'Ejerudgift', 'Boligydelse', 'Anvendelse', 'Boligtype', 'Enhedsareal', 'Beboelsesareal', 'Værelser', 'Antal toiletter', 'Badeforhold', 'Antal badeværelser', 'Køkkenforhold', 'Energikode', 'Toiletforhold', 'Bygningsnummer', 'Ydervæg', 'Anvendelse',
-                        'Tag', 'Etager', 'Carport', 'Seneste ombygning', 'Udhus', 'Boligstørrelse (BBR)', 'Objekt status', 'Boligstørrelse, tinglyst:', 'Afvigende etager', 'Boligstørrelse', 'Boligenhed med eget køkken', 'Varmeinstallation', 'Boligenhed uden eget køkken', 'Matrikelnummer', 'Kommunal ejerlav navn', 'Grundstørrelse', 'Lands ejerlav kode', 'Vejareal', 'Lands ejerlav navn', 'Primær matrikel', 'Ejendomsnummer', 'Kommunal ejerlav kode']
+        self.expected = ['URL', 'Adresse', 'Pris', 'Type', 'Energimærke', 'Ejerudgift', 'Boligydelse', 'Anvendelse', 'Boligtype', 'Enhedsareal', 'Beboelsesareal', 'Værelser', 'Antal toiletter', 'Badeforhold', 'Antal badeværelser', 'Køkkenforhold', 'Energikode', 'Toiletforhold', 'Bygningsnummer', 'Ydervæg',
+                        'Tag', 'Etager', 'Carport', 'Seneste ombygning', 'Udhus', 'Boligstørrelse BBR', 'Objekt status', 'Boligstørrelse tinglyst', 'Afvigende etager', 'Boligstørrelse', 'Boligenhed med eget køkken', 'Varmeinstallation', 'Boligenhed uden eget køkken', 'Matrikelnummer', 'Kommunal ejerlav navn', 'Grundstørrelse', 'Lands ejerlav kode', 'Vejareal', 'Lands ejerlav navn', 'Primær matrikel', 'Ejendomsnummer', 'Kommunal ejerlav kode']
         self.expected_with_types = [
+            {'URL': 'url'},
+            {'Adresse': 'str'},
+            {'Pris': 'int'},
+            # {'Kvadratmeter pris': 'int'},
+            # {'Gnm kvadratmeter pris i area', 'int'},
+            # {'Area Population': 'int'},
             {'Type': 'str'},
             {'Energimærke': 'str'},
             {'Ejerudgift': 'int'},
@@ -28,15 +34,14 @@ class Crawler():
             {'Toiletforhold': 'str'},
             {'Bygningsnummer': 'int'},
             {'Ydervæg': 'str'},
-            {'Anvendelse': 'str'},
             {'Tag': 'str'},
             {'Etager': 'int'},
             {'Carport': 'int'},
             {'Seneste ombygning': 'int'},
             {'Udhus': 'int'},
-            {'Boligstørrelse (BBR)': 'int'},
+            {'Boligstørrelse BBR': 'int'},
             {'Objekt status': 'str'},
-            {'Boligstørrelse, tinglyst:': 'int'},
+            {'Boligstørrelse tinglyst': 'int'},
             {'Afvigende etager': 'str'},
             {'Boligstørrelse': 'int'},
             {'Boligenhed med eget køkken': 'int'},
@@ -56,12 +61,21 @@ class Crawler():
         self.encoding = 'iso8859_10'
         self.writer = writer
 
+    def clean_header(self, header):
+        cleaned = header
+        cleaned = re.sub(r'\W+', ' ', cleaned).strip()
+
+        return cleaned
+
     def clean_data(self, key, value):
         cleaned = value
         ##exp_type = next(item for item in self.expected_with_types if key in item)
         exp_type = [item for item in self.expected_with_types if key in item] 
         if exp_type[0][key] == 'int':
             cleaned = re.sub('[^0-9]','', cleaned)
+
+        if exp_type[0][key] == 'str':
+            cleaned = re.sub(r'\W+', ' ', cleaned).strip()
         
         return cleaned
 
@@ -84,7 +98,8 @@ class Crawler():
         else:
             if data is not None:
                 if self.writer.write(data, self.expected):
-                    return 'Saved ' + url
+                    #return 'Saved ' + url
+                    return str(data)
                 else:
                     return 'Error writing ' + str(data)
             else:
@@ -124,6 +139,37 @@ class Crawler():
 
         # data from MAIN page
         
+        # url
+        url_key = 'URL'
+        url_value = url
+        data_raw[url_key] = url_value
+
+        # pris
+        pris_key = 'Pris'
+        pris_value = soup.select_one('span.h4').text.strip()
+        data_raw[pris_key] = pris_value
+
+        # adresse
+        addr_key = 'Adresse'
+        addr_value = soup.select_one('div.col-md-12:nth-child(1) > div:nth-child(2) > div:nth-child(3) > span:nth-child(1)').text.strip()
+        data_raw[addr_key] = addr_value
+
+        # # kvadratmeter pris
+        # sqmeter_price_key = 'Kvadratmeter pris'
+        # sqmeter_price_value = soup.select_one('span.d-block:nth-child(2)').text.strip()
+        # data_raw[sqmeter_price_key] = sqmeter_price_value
+
+        # # area avg kvadratmeter pris
+        # avg_sqmeter_price_area_key = 'Gnm kvadratmeter pris i area'
+        # avg_sqmeter_price_area_value = soup.select_one('div.border-bottom:nth-child(2) > div:nth-child(1) > app-property-information-block:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)').text.strip()
+        # data_raw[avg_sqmeter_price_area_key] = avg_sqmeter_price_area_value
+
+        # #area population
+        # area_population_key = 'Area Population'
+        # area_population_value = soup.select_one('app-property-information-block.col-6:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)').text.strip()
+        # data_raw[area_population_key] = area_population_value
+
+
         # type
         type_key = 'Type'
         type_value = soup.select_one('app-property-label.d-none > label:nth-child(1) > span:nth-child(2)').text.strip()
@@ -166,7 +212,9 @@ class Crawler():
                     #print(key + ': ' + value)
                     #temp.append(key.strip())
 
-                    data_raw[key] = value
+                    #print(self.clean_header(key))
+
+                    data_raw[self.clean_header(key)] = value
 
             if header in type2:
                 blocks = content.select('app-property-information-block')
@@ -183,17 +231,19 @@ class Crawler():
                     #print(str(header) + ': ' + str(value))
                     #temp.append(key.strip())
 
-                    data_raw[key] = value
+                    #print(self.clean_header(key))
+
+                    data_raw[self.clean_header(key)] = value
+                    
 
         # cross-check crawled data with expected data types for missing data
         for ex_key in self.expected:
             if ex_key in data_raw:
-                data[ex_key] = data_raw[ex_key]
+                #data[ex_key] = data_raw[ex_key]
                 data[ex_key] = self.clean_data(ex_key, data_raw[ex_key])
             else:
                 data[ex_key] = None
 
-        #print(temp)
         return data
 
    

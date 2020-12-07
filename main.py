@@ -13,7 +13,7 @@ crawler = Crawler(writer)
 links_df = pd.read_csv('./data/links.csv', encoding='iso8859_10')
 #print(links_df.head())
 links = links_df.iloc[:,0]
-links_50 = links[:50].tolist()
+#links_50 = links[:50].tolist()
 
 ### GET LINKS OLD ###
 #header_list = ['url', 'bbr_url', 'energy', 'type', 'price'] 
@@ -28,13 +28,13 @@ links_50 = links[:50].tolist()
 
 
 ### CRAWL LINKS AND WRITE DATE TO FILE ###
-#print(crawler.run(links))
+print(crawler.run(links))
 
 
 ### VIEW HOUSE DATA ###
 
-house_data = pd.read_csv('./data/house_data.csv', encoding='UTF-8')
+#house_data = pd.read_csv('./data/house_data.csv', encoding='UTF-8')
 #print(house_data.head())
-print(house_data[:100])
+#print(house_data[:100])
 
 
