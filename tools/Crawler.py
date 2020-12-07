@@ -8,11 +8,12 @@ from operator import itemgetter
 
 class Crawler():
     def __init__(self, writer):
-        self.expected = ['URL', 'Adresse', 'Pris', 'Type', 'Energimærke', 'Ejerudgift', 'Boligydelse', 'Anvendelse', 'Boligtype', 'Enhedsareal', 'Beboelsesareal', 'Værelser', 'Antal toiletter', 'Badeforhold', 'Antal badeværelser', 'Køkkenforhold', 'Energikode', 'Toiletforhold', 'Bygningsnummer', 'Ydervæg',
-                        'Tag', 'Etager', 'Carport', 'Seneste ombygning', 'Udhus', 'Boligstørrelse BBR', 'Objekt status', 'Boligstørrelse tinglyst', 'Afvigende etager', 'Boligstørrelse', 'Boligenhed med eget køkken', 'Varmeinstallation', 'Boligenhed uden eget køkken', 'Matrikelnummer', 'Kommunal ejerlav navn', 'Grundstørrelse', 'Lands ejerlav kode', 'Vejareal', 'Lands ejerlav navn', 'Primær matrikel', 'Ejendomsnummer', 'Kommunal ejerlav kode']
+        self.expected = ['URL', 'Adresse', 'Year build', 'Pris', 'Type', 'Energimærke', 'Ejerudgift', 'Boligydelse', 'Anvendelse', 'Boligtype', 'Enhedsareal', 'Beboelsesareal', 'Værelser', 'Antal toiletter', 'Badeforhold', 'Antal badeværelser', 'Køkkenforhold', 'Energikode', 'Toiletforhold', 'Bygningsnummer', 'Ydervæg',
+                        'Tag', 'Etager', 'Carport', 'Seneste ombygning', 'Udhus', 'Boligstørrelse BBR', 'Objekt status', 'Boligstørrelse tinglyst', 'Afvigende etager', 'Boligstørrelse', 'Boligenhed med eget køkken', 'Varmeinstallation', 'Boligenhed uden eget køkken', 'Matrikelnummer', 'Kommunal ejerlav navn', 'Grundstørrelse', 'Lands ejerlav kode', 'Vejareal', 'Lands ejerlav navn', 'Primær matrikel', 'Ejendomsnummer', 'Kommunal ejerlav kode', 'Ejendomsværdiskat', 'Grundskyld']
         self.expected_with_types = [
             {'URL': 'url'},
             {'Adresse': 'str'},
+            {'Year build': 'int'},
             {'Pris': 'int'},
             # {'Kvadratmeter pris': 'int'},
             # {'Gnm kvadratmeter pris i area', 'int'},
@@ -55,7 +56,9 @@ class Crawler():
             {'Lands ejerlav navn': 'str'},
             {'Primær matrikel': 'str'},
             {'Ejendomsnummer': 'str'},
-            {'Kommunal ejerlav kode': 'str'}
+            {'Kommunal ejerlav kode': 'str'},
+            {'Ejendomsværdiskat': 'int'},
+            {'Grundskyld': 'int'}
         ]
 
         self.encoding = 'iso8859_10'
@@ -97,11 +100,11 @@ class Crawler():
             print(e)
         else:
             if data is not None:
-                if self.writer.write(data, self.expected):
-                    #return 'Saved ' + url
-                    return str(data)
-                else:
-                    return 'Error writing ' + str(data)
+                    if self.writer.write(data, self.expected):
+                        #return 'Saved ' + url
+                        return str(data)
+                    else:
+                        return 'Error writing ' + str(data)
             else:
                 return "no data @ " + url
 
@@ -148,6 +151,12 @@ class Crawler():
         pris_key = 'Pris'
         pris_value = soup.select_one('span.h4').text.strip()
         data_raw[pris_key] = pris_value
+        
+        # year build
+        year_build_span = soup.select_one('div.col-6:nth-child(7) > app-property-detail:nth-child(1) > app-tooltip:nth-child(1) > div:nth-child(1) > span:nth-child(4)').text.strip()
+        year_build_key = 'Year build'
+        year_build_value = year_build_span.split(':')[1].strip()
+        data_raw[year_build_key] = year_build_value
 
         # adresse
         addr_key = 'Adresse'
@@ -195,7 +204,6 @@ class Crawler():
         # data from BBR page
         contents = soup.select('app-generic-property-info-content')
 
-        temp = [] # for help creating the expected list
         type1 = ['Detaljerede boliginformationer', 'Bygning', 'Matrikler']
         type2 = ['Skatter', 'Ejerskab', 'Grunde']
 
@@ -204,44 +212,50 @@ class Crawler():
             header = content.select_one('.card-header').text.strip()
 
             if header in type1:
-                blocks = content.select('.block')
-                for block in blocks:
-                    key = block.select_one('h4').text.strip()
-                    value = block.select_one('span').text.strip()
-                    
-                    #print(key + ': ' + value)
+                blocks_type1 = content.select('.block')
+                for block_type1 in blocks_type1:
+                    key_type1 = block_type1.select_one('h4').text.strip()
+                    value_type1 = block_type1.select_one('span').text.strip()
+
+                    #print(key_type1 + ': ' + value_type1)
                     #temp.append(key.strip())
 
                     #print(self.clean_header(key))
 
-                    data_raw[self.clean_header(key)] = value
+                    data_raw[self.clean_header(key_type1)] = value_type1
 
             if header in type2:
-                blocks = content.select('app-property-information-block')
-                for block in blocks:
-                    header_div = block.select_one('.description')
-                    value_div = block.select_one('.value')
+                blocks_type2 = content.select('app-property-information-block')
+                for block_type2 in blocks_type2:
+                    header_div_type2 = block_type2.select_one('.description')
+                    value_div_type2 = block_type2.select_one('.value')
 
-                    if header_div is not None:
-                        header = header_div.text.strip()
+                    if header_div_type2 is not None and value_div_type2 is not None:
+                        header_type2 = header_div_type2.text.strip()
+                        value_type2 = value_div_type2.text.strip()
+                    
+                    #if value_div is not None:
+                        #value = value_div.text.strip()
 
-                    if value_div is not None:
-                        value = value_div.text.strip()
-
-                    #print(str(header) + ': ' + str(value))
+                        #print(header_type2 + ' : ' + value_type2)
                     #temp.append(key.strip())
 
                     #print(self.clean_header(key))
 
-                    data_raw[self.clean_header(key)] = value
+                        data_raw[self.clean_header(header_type2)] = value_type2
                     
 
+        #print('DATA RAW')
+        #print(data_raw)
         # cross-check crawled data with expected data types for missing data
+        #print('cross checking: ')
         for ex_key in self.expected:
             if ex_key in data_raw:
+                #print(ex_key + ' : ' + data_raw[ex_key])
                 #data[ex_key] = data_raw[ex_key]
                 data[ex_key] = self.clean_data(ex_key, data_raw[ex_key])
             else:
+                #print(ex_key + ' : ' + 'None data')
                 data[ex_key] = None
 
         return data

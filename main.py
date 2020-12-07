@@ -28,7 +28,7 @@ links = links_df.iloc[:,0]
 
 
 ### CRAWL LINKS AND WRITE DATE TO FILE ###
-print(crawler.run(links))
+#print(crawler.run(links))
 
 
 ### VIEW HOUSE DATA ###
