@@ -1,6 +1,6 @@
 import json
-
 from classes.Validator import NumberValidator, ZipValidator, YearBuildValidator
+
 uniques = None
 
 def loadUniques():
