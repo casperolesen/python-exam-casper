@@ -13,9 +13,9 @@ Projektet indeholder en webcrawler, analyse og præsentation af data samt et CLI
     - [Fritidshus (Notebook)](FritidshusCleaned.ipynb)
 * Data-håndtering (Backend for data og machine-learning)
     - [VillaData](classes/VillaData.py)
-    - [Rækkehus](classes/Raekkehus.py)
+    - [Rækkehus](classes/RaekkehusData.py)
     - [Ejerlejlighed](classes/EjerlejlighedData.py)
-    - [Fritidshus](classes/Fritidshus.py)
+    - [Fritidshus](classes/FritidshusData.py)
 * CLI
     - [PriceMachine](PriceMachine.py)
 * Data
