@@ -6,7 +6,7 @@ from tools.Crawler import Crawler
 from tools.Writer import Writer
 
 ### SETUP ###
-writer = Writer('./data/house_data.csv')
+writer = Writer('./data/house_data_new.csv')
 crawler = Crawler(writer)
 
 ### GET LINKS NEW ###

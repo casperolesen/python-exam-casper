@@ -19,9 +19,13 @@ class ZipValidator(Validator):
             raise ValidationError(
                 message = "Please enter a value",
                 cursor_position = len(document.text),
-            )
-        if not document.text.isnumeric():
+            )    
+        if not document.text.isnumeric() or len(document.text) != 4:
             raise ValidationError(
                 message = "Please enter a valid zipcode",
                 cursor_position = len(document.text),
+            )
+        if int(document.text) < 1001 or int(document.text) > 9990:
+            raise ValidationError(
+                message = "This zipcode is not allowed"
             )
