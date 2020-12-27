@@ -117,6 +117,7 @@ def clean_data():
     'URL',
     'Carport',
     'Boligydelse',
+    'Boligenhed med eget køkken',
     'Anvendelse',
     'Type'
      ], 'columns', inplace=True)

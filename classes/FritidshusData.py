@@ -47,7 +47,7 @@ def trainModel():
     data.drop(['Pris'], 'columns', inplace=True)
     X = data
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=101)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=101)
 
     lm = LinearRegression()
     lm.fit(X_train, y_train)
@@ -136,7 +136,11 @@ def clean_data():
     t=t[t['Værelser']<21.000000]
 
     #Dropping high number of groundsize
-    t=  t[t['Grundstørrelse']<2350.000000]
+    t=t[t['Grundstørrelse']<2350.000000]
+    
+    
+   #Dropping low number of groundsize 
+    t=t[t['Grundstørrelse']>500]
 
     #Drops those with missing values 
     t= t.dropna()

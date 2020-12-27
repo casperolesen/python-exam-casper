@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from classes.Villa import Villa
+
 from tools.Crawler import Crawler
 from tools.Writer import Writer
 

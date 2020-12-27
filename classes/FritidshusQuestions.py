@@ -36,7 +36,7 @@ def getHeatingSelects():
 
 def getFritidshusFactorIndex(name, value):
     if (name == 'Ydervæg'):
-        index = getWallSelects.index(value)
+        index = getWallSelects().index(value)
         return index
     elif (name == 'Tag'):
         index = getRoofSelects().index(value)
@@ -87,11 +87,6 @@ def getFritidshusQuestions():
             "type": "text",
             "name": "Antal badeværelser",
             "message": "Indtast antal badeværelser",
-        },{
-             "type": "text",
-            "name": "Boligenhed med eget køkken",
-            "message": "Hvor mange køkkener har boligenheden ? ",
-
         },
         {
             "type": "select",
@@ -104,16 +99,6 @@ def getFritidshusQuestions():
             "name": "Tag",
             "message": "Hvilken type tag har boligenheden?",
             "choices": getRoofSelects(),
-        },{
-            "type": "text",
-            "name": "Grundskyld",
-            "message": "Indtast Grundskyld",
-
-        },
-        {
-            "type": "text",
-            "name": "Etager",
-            "message": "Indtast antal etager",
         },
         {
             "type": "text",
@@ -121,17 +106,35 @@ def getFritidshusQuestions():
             "message": "Seneste ombygning (brug byggeår, hvis ingen ombygning)",
         },
         {
+             "type": "text",
+            "name": "Boligenhed med eget køkken",
+            "message": "Hvor mange køkkener har boligenheden ? ",
+
+        }, {
             "type": "select",
             "name": "Varmeinstallation",
             "message": "Hvilken type varmeinstallation har boligenheden?",
             "choices": getHeatingSelects(),
+        },
+         {
+            "type": "text",
+            "name": "Grundstørrelse",
+            "message": "Indtast Grundstørrelse",
+
         },
         
         {
             "type": "text",
             "name": "Ejendomsværdiskat",
             "message": "Indtast ejendomsværdiskat",
+        },
+        {
+            "type": "text",
+            "name": "Grundskyld",
+            "message": "Indtast Grundskyld",
+
         }
+       
     ]
 
     return questions

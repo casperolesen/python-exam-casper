@@ -104,11 +104,6 @@ def getEjerlejlighedQuestions():
             "type": "text",
             "name": "Antal badeværelser",
             "message": "Indtast antal badeværelser",
-        },{
-             "type": "text",
-            "name": "Boligenhed med eget køkken",
-            "message": "Hvor mange køkkener har boligenheden?",
-
         },
         {
             "type": "select",
@@ -121,12 +116,7 @@ def getEjerlejlighedQuestions():
             "name": "Tag",
             "message": "Hvilket tag har boligen?",
             "choices": getRoofSelects(),
-        },{
-            "type": "text",
-            "name": "Grundskyld",
-            "message": "Indtast Grundskyld",
-
-        },
+        }, 
         {
             "type": "text",
             "name": "Etager",
@@ -143,11 +133,15 @@ def getEjerlejlighedQuestions():
             "message": "Hvilken varmeinstallation har ejendommen?",
             "choices": getHeatingSelects(),
         },
-        
         {
             "type": "text",
             "name": "Ejendomsværdiskat",
             "message": "Indtast ejendomsværdiskat",
+        },
+        {
+            "type": "text",
+            "name": "Grundskyld",
+            "message": "Indtast Grundskyld",
         }
     ]
 

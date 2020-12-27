@@ -62,7 +62,7 @@ def convertAnswers(type, answers):
             cats = ['Energimærke','Ydervæg','Varmeinstallation','Tag']
             for a in answers:
                 if (a in cats):
-                    temp.append(int(getEjerlejlighedFactorIndex(a, answer[a])))
+                    temp.append(int(getEjerlejlighedFactorIndex(a, answers[a])))
                 else:
                     temp.append(int(answers[a]))
 
@@ -70,12 +70,13 @@ def convertAnswers(type, answers):
             cats = ['Varmeinstallation','Tag','Ydervæg']
             for a in answers:
                 if (a in cats):
-                    temp.append(int(getFritidshusFactorIndex(a, answer[a])))
+                    temp.append(int(getFritidshusFactorIndex(a, answers[a])))
                 else:
                     temp.append(int(answers[a]))
                         
         return np.array(temp)
-    except:
+    except Exception as e:
+        print(e)
         return None
 
 def getQuestions(type):
