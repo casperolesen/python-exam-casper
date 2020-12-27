@@ -11,10 +11,13 @@ housetypes = ["Villa", "Ejerlejlighed", "Rækkehus", "Fritidshus"]
 
 def predictPrice(answers):
     global model
-    if (model is None):
-        return "No model available"
-    else:
-        return model.predict(answers.reshape(1,-1))
+    try:
+        if (model is None):
+            return "No model available"
+        else:
+            return model.predict(answers.reshape(1,-1))
+    except:
+        return None
 
 def loadModel(type):
     global model
@@ -25,23 +28,26 @@ def loadModel(type):
 
 def convertAnswers(type, answers):
     temp = []
-    if (type == 'Villa'):
-        cats = ['Energimærke', 'Ydervæg', 'Tag', 'Varmeinstallation']
-        for a in answers:
-            if (a in cats):
-                temp.append(int(getVillaFactorIndex(a, answers[a])))
-            else:
-                temp.append(int(answers[a]))
+    try:
+        if (type == 'Villa'):
+            cats = ['Energimærke', 'Ydervæg', 'Tag', 'Varmeinstallation']
+            for a in answers:
+                if (a in cats):
+                    temp.append(int(getVillaFactorIndex(a, answers[a])))
+                else:
+                    temp.append(int(answers[a]))
 
-    elif (type == 'Rækkehus'):
-        cats = ['Energimærke', 'Ydervæg', 'Tag', 'Varmeinstallation']
-        for a in answers:
-            if (a in cats):
-                temp.append(int(getRaekkehusFactorIndex(a, answers[a])))
-            else:
-                temp.append(int(answers[a]))
+        elif (type == 'Rækkehus'):
+            cats = ['Energimærke', 'Ydervæg', 'Tag', 'Varmeinstallation']
+            for a in answers:
+                if (a in cats):
+                    temp.append(int(getRaekkehusFactorIndex(a, answers[a])))
+                else:
+                    temp.append(int(answers[a]))
 
-    return np.array(temp)
+        return np.array(temp)
+    except:
+        return None
 
 def getQuestions(type):
     if (type == 'Villa'):
@@ -59,8 +65,14 @@ if __name__ == "__main__":
 
         loadModel(type_a)
 
-        answers = questionary.prompt(getQuestions(type_a))
-        print('Estimeret pris: {pris}'.format(pris = predictPrice(convertAnswers(type_a, answers))))
+        questions = getQuestions(type_a)
+        if questions is not None:
+            answers = questionary.prompt(questions)
+
+            if answers is not None:
+                converted_answers = convertAnswers(type_a, answers)
+                if converted_answers is not None:
+                    print('Estimeret pris: {pris}'.format(pris = predictPrice(convertAnswers(type_a, answers))))
 
         run_q = questionary.confirm("Vil du prøve igen?")
         run = run_q.ask()

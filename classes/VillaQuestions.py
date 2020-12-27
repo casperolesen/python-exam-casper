@@ -1,6 +1,6 @@
 import json
 
-from classes.Validator import NumberValidator, ZipValidator
+from classes.Validator import NumberValidator, ZipValidator, YearBuildValidator
 uniques = None
 
 def loadUniques():
@@ -72,6 +72,7 @@ def getVillaQuestions():
             "type": "text",
             "name": "Year build",
             "message": "Byggeår",
+            "validate": YearBuildValidator(),
         },
         {
             "type": "select",
@@ -88,22 +89,26 @@ def getVillaQuestions():
         {
             "type": "text",
             "name": "Enhedsareal",
-            "message": "Boligstørrelse", 
+            "message": "Boligstørrelse",
+            "validate": NumberValidator(), 
         },
         {
             "type": "text",
             "name": "Værelser",
             "message": "Antal Værelser",
+            "validate": NumberValidator(),
         },
         {
             "type": "text",
             "name": "Antal Toiletter",
             "message": "Antal Toiletter",
+            "validate": NumberValidator(),
         },
         {
             "type": "text",
             "name": "Antal badeværelser",
             "message": "Antal badeværelser",
+            "validate": NumberValidator(),
         },
         {
             "type": "select",
@@ -121,11 +126,13 @@ def getVillaQuestions():
             "type": "text",
             "name": "Etager",
             "message": "Antal etager",
+            "validate": NumberValidator(),
         },
         {
             "type": "text",
             "name": "Seneste ombygning",
             "message": "Seneste ombygning (brug byggeår, hvis ingen ombygning)",
+            "validate": YearBuildValidator(),
         },
         {
             "type": "select",
@@ -137,6 +144,7 @@ def getVillaQuestions():
             "type": "text",
             "name": "Grundstørrelse",
             "message": "Grundstørrelse",
+            "validate": NumberValidator(),
         }
     ]
 
