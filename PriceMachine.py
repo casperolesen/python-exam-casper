@@ -7,7 +7,9 @@ from classes.RaekkehusData import loadModel as loadRaekkehusModel
 from classes.RaekkehusQuestions import getRaekkehusQuestions, getRaekkehusFactorIndex
 from classes.EjerlejlighedData import loadModel as loadEjerlejlighedModel
 from classes.EjerlejlighedQuestions import getEjerlejlighedQuestions, getEjerlejlighedFactorIndex
-from classes.FritidshusData import getFritidshusQuestions, getFritidshusFactorIndex
+from classes.FritidshusQuestions import getFritidshusQuestions, getFritidshusFactorIndex
+from classes.FritidshusData import loadModel as loadFritidshusModel
+
 
 model = None
 housetypes = ["Villa", "Ejerlejlighed", "Rækkehus", "Fritidshus"]
