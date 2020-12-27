@@ -9,6 +9,8 @@ Projektet indeholder en webcrawler, analyse og præsentation af data samt et CLI
 * Data-præsentation
     - [Villa (Notebook)](villa_presentation.ipynb)
     - [Rækkehus (Notebook)](raekkehus_presentation.ipynb)
+    - [Ejerlejlighed (Notebook)](EjerlejlighedCleaned.ipynb)
+    - [Fritidshus (Notebook)](FritidshusCleaned.ipynb)
 * Data-håndtering (Backend for data og machine-learning)
     - [VillaData](classes/VillaData.py)
     - [Rækkehus](classes/Raekkehus.py)
