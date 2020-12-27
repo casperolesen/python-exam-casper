@@ -6,10 +6,6 @@ from sklearn.linear_model import LinearRegression
 import pickle
 import questionary
 
-import sys
-for path in sys.path:
-    print(path)
-
 file_p ='./data/house_data.csv'
 
 data = None
