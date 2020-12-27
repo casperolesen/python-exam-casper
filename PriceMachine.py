@@ -5,6 +5,11 @@ from classes.VillaData import loadModel as loadVillaModel
 from classes.VillaQuestions import getVillaQuestions, getVillaFactorIndex
 from classes.RaekkehusData import loadModel as loadRaekkehusModel
 from classes.RaekkehusQuestions import getRaekkehusQuestions, getRaekkehusFactorIndex
+from classes.EjerlejlighedData import loadModel as loadEjerlejlighedModel
+from classes.EjerlejlighedQuestions import getEjerlejlighedQuestions, getEjerlejlighedFactorIndex
+from classes.FritidshusQuestions import getFritidshusQuestions, getFritidshusFactorIndex
+from classes.FritidshusData import loadModel as loadFritidshusModel
+
 
 model = None
 housetypes = ["Villa", "Ejerlejlighed", "Rækkehus", "Fritidshus"]
@@ -23,8 +28,15 @@ def loadModel(type):
     global model
     if (type == 'Villa'):
         model = loadVillaModel('data/villa_model.pickle')
+    elif (type == 'Ejerlejlighed'):
+        model = loadEjerlejlighedModel('data/ejerlejlighed_model.pickle')
+        
     elif (type == 'Rækkehus'):
         model = loadRaekkehusModel('data/raekkehus_model.pickle')
+    elif (type == 'Fritidshus'):
+        model = loadFritidshusModel('data/fritidshus_model.pickle')
+          
+
 
 def convertAnswers(type, answers):
     temp = []
@@ -45,6 +57,23 @@ def convertAnswers(type, answers):
                 else:
                     temp.append(int(answers[a]))
 
+    
+        elif (type == 'Ejerlejlighed'):
+            cats = ['Energimærke','Ydervæg','Varmeinstallation','Tag']
+            for a in answers:
+                if (a in cats):
+                    temp.append(int(getEjerlejlighedFactorIndex(a, answer[a])))
+                else:
+                    temp.append(int(answers[a]))
+
+        elif (type == 'Fritidshus'):
+            cats = ['Varmeinstallation','Tag','Ydervæg']
+            for a in answers:
+                if (a in cats):
+                    temp.append(int(getFritidshusFactorIndex(a, answer[a])))
+                else:
+                    temp.append(int(answers[a]))
+                        
         return np.array(temp)
     except:
         return None
@@ -54,6 +83,10 @@ def getQuestions(type):
         return getVillaQuestions()
     elif (type == 'Rækkehus'):
         return getRaekkehusQuestions()
+    elif (type == 'Ejerlejlighed'):
+        return getEjerlejlighedQuestions()
+    elif (type == 'Fritidshus'):
+        return getFritidshusQuestions()       
 
 if __name__ == "__main__":
     run = True
