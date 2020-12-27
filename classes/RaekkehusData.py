@@ -13,34 +13,14 @@ X_test_final = None
 y_test_final = None
 
 uniques = None
-# # energimærker
-# energimærke_unique = ['F', 'D', 'E', 'C', 'G', 'B', 'A10', 'A15', 'A20', 'A', '0', 'A2', 'A1']
 
-# # ydervægge
-# Ydervæg_unique = ['Mursten', 'Letbetonsten', 'Bindingsværk', 'Træ', 'Betonelementer',
-#  'Andet materiale', 'Fibercement herunder asbest', 'Fibercement uden asbest',
-#  'Glas', 'Metal', 'Plastmaterialer']
-
-# # tage
-# Tag_unique = ['Fibercement herunder asbest', 'Tegl', 'Betontagsten', 'Metal',
-#  'Tagpap med stor hældning', 'Fibercement uden asbest',
-#  'Tagpap med lille hældning', 'Andet materiale', 'Stråtag', 'Levende tage',
-#  'Glas', 'Plastmaterialer']
-
-# # varmeinstallation
-# Varmeinstallation_unique = ['Centralvarme med én fyringsenhed', 'Fjernvarme blokvarme', 'Elvarme',
-#  'Varmepumpe', 'Centralvarme med to fyringsenheder',
-#  'Ovn til fast og flydende brændsel', 'Ingen varmeinstallation', 'Blandet',
-#  'Gasradiator']
-
-
-def getVillaDataRaw():
+def getRaekkehusDataRaw():
     temp = pd.read_csv(file_path)
-    temp = temp[temp['Type'] == 'Villa']
+    temp = temp[temp['Type'] == 'Rækkehus']
     return temp
 
 
-def getVillaData():
+def getRaekkehusData():
     global data, uniques
     if data is None:
         print('Cleaning data')
@@ -52,7 +32,7 @@ def getVillaData():
 
 def trainModel():
     global model_final, X_test_final, y_test_final
-    data = getVillaData()
+    data = getRaekkehusData()
 
     y = data['Pris']
     
@@ -83,7 +63,7 @@ def saveModel():
     if (model_final is None):
         return "No model to save. Remember to train it first"
     else: 
-        filename = './data/villa_model.pickle'
+        filename = './data/raekkehus_model.pickle'
         pickle.dump(model_final, open(filename, 'wb'))
         print("Model saved!")
         return X_test_final, y_test_final
@@ -96,8 +76,8 @@ def clean_data():
     # read file
     temp = pd.read_csv(file_path)
 
-    # select only types of villa
-    temp = temp[temp['Type'] == 'Villa']
+    # select only types of Rækkehus
+    temp = temp[temp['Type'] == 'Rækkehus']
 
     # drop non-relevant columns (picked after analyzing the raw data)
     temp.drop([
@@ -146,15 +126,15 @@ def clean_data():
     temp['Adresse'] = temp['Adresse'].str.extract(r'(\d{4})').astype('int64')
 
     # remove data with abnormal feature values
-    temp = temp[temp['Enhedsareal']<300]
-    temp = temp[temp['Værelser']<10]
+    temp = temp[temp['Enhedsareal']<180]
+    temp = temp[temp['Værelser']<7]
     temp = temp[temp['Antal toiletter']<=3]
     temp = temp[temp['Antal badeværelser']<=3]
-    temp = temp[temp['Grundstørrelse']<1500]
-    temp = temp[ (temp['Year build']>1850) & (temp['Year build']<2020) ]
+    temp = temp[temp['Grundstørrelse']<700]
+    temp = temp[ (temp['Year build']>1900) & (temp['Year build']<2020) ]
     
     # clean up 'Seneste ombygning'
-    temp['Seneste ombygning'] = np.where(temp['Seneste ombygning'] < 1850, temp['Year build'], temp['Seneste ombygning'])
+    temp['Seneste ombygning'] = np.where(temp['Seneste ombygning'] < 1900, temp['Year build'], temp['Seneste ombygning'])
 
     # remove data with abnormal target value
     temp = temp[temp['Pris'] < 6000000]
@@ -177,9 +157,7 @@ def clean_data():
         factorized.append({'name': temp[i].name, 'uniques': uniques_temp.to_numpy().tolist()})
     
     uniques = factorized
-    #filename = './data/villa_uniques.pickle'
-    #pickle.dump(uniques, open(filename, 'wb'))
-    with open('./data/villa_uniques.txt', 'w') as outfile:
+    with open('./data/raekkehus_uniques.txt', 'w') as outfile:
         json.dump(uniques, outfile)
 
     return temp

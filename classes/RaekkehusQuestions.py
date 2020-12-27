@@ -1,11 +1,10 @@
 import json
 
-from classes.Validator import NumberValidator, ZipValidator
 uniques = None
 
 def loadUniques():
     global uniques
-    with open('./data/villa_uniques.txt') as json_file:
+    with open('./data/raekkehus_uniques.txt') as json_file:
         uniques = json.load(json_file)
 
 def getEnergySelects():
@@ -40,7 +39,7 @@ def getHeatingSelects():
     heatings_select = [h for h in heatings_uniques[0]]
     return heatings_select
 
-def getVillaFactorIndex(name, value):
+def getRaekkehusFactorIndex(name, value):
     if (name == 'Energimærke'):
         index = getEnergySelects().index(value)
         return index
@@ -57,7 +56,7 @@ def getVillaFactorIndex(name, value):
         return None
     
 
-def getVillaQuestions():
+def getRaekkehusQuestions():
     if (uniques is None):
         loadUniques()
     
@@ -66,7 +65,6 @@ def getVillaQuestions():
             "type": "text",
             "name": "Adresse",
             "message": "Postnummer",
-            "validate": ZipValidator(),
         },
         {
             "type": "text",
@@ -83,7 +81,6 @@ def getVillaQuestions():
             "type": "text",
             "name": "Ejerudgift",
             "message": "Ejerudgift i kroner",
-            "validate": NumberValidator(),
         },
         {
             "type": "text",
