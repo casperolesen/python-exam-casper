@@ -1,6 +1,6 @@
 ### Formål 
 Vi vil hente data fra https://www.boliga.dk/salg/resultater?page=1&sort=date-d data er en liste over solgte boliger i Danmark med 1,4 millioner rækker data. Vi tænker at tage data fra perioden 2015-2020 for ikke at skulle tænke for meget på inflation.
-Vi vil prøve at finde en sammenhæng mellem den tilgængelige data og prisen på boligen, for derefter at sammenligne vores resultat mod det reele resultat.
+Ud fra dataen vil vi træne machine learning modeller, og lave et program som kan estimere en pris på en bolig.
 
 
 ### How-to
