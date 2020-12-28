@@ -6,6 +6,7 @@ Vi vil prøve at finde en sammenhæng mellem den tilgængelige data og prisen p�
 ### How-to
 Start programmet ved at køre `python PriceMachine.py`
 
+### Struktur
 Projektet indeholder en webcrawler, analyse og præsentation af data samt et CLI-program til estimering af en pris.
 
 * [Webcrawler (Er kørt fra main.py)](tools/)
